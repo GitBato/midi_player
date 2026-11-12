@@ -1,0 +1,82 @@
+<Window x:Class="MidiPlayerWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MIDI Player" Width="1060" SizeToContent="Height" ResizeMode="CanResizeWithGrip"
+        AllowDrop="True" Background="#FF202428" Foreground="#FFE0E0E0"
+        FontFamily="Yu Gothic UI" FontSize="13">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFE0E0E0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="MinWidth" Value="36" />
+            <Setter Property="Padding" Value="8,2" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Width" Value="150" />
+            <Setter Property="Margin" Value="4,0,12,0" />
+        </Style>
+    </Window.Resources>
+
+    <StackPanel Margin="10">
+        <!-- 再生・停止・曲名・時間 -->
+        <DockPanel>
+            <Button x:Name="PlayButton" Content="▶" ToolTip="再生／停止（Space）" Click="PlayButton_Click" />
+            <Button Content="開く…" ToolTip="ファイルを開く（Ctrl+O）。ドラッグ＆ドロップでも開けます" Click="OpenButton_Click" />
+            <TextBlock x:Name="TimeText" DockPanel.Dock="Right" Text="00:00 / 00:00" FontFamily="Consolas" Margin="8,0,0,0" />
+            <TextBlock x:Name="TitleText" Text="（曲をドロップ）" TextTrimming="CharacterEllipsis" FontWeight="SemiBold" />
+        </DockPanel>
+
+        <!-- 音色の SysEx を転送しているあいだだけ出す -->
+        <Border x:Name="TransferBar" Visibility="Collapsed" Margin="0,6,0,0" Padding="8,4" CornerRadius="3"
+                Background="#FF4A3410" BorderBrush="#FFFFA030" BorderThickness="1">
+            <DockPanel>
+                <TextBlock x:Name="TransferText" Foreground="#FFFFD080" FontWeight="SemiBold" Margin="0,0,10,0" />
+                <ProgressBar x:Name="TransferProgress" Height="10" Minimum="0" Maximum="1"
+                             Foreground="#FFFFA030" Background="#FF2A2010" BorderThickness="0" />
+            </DockPanel>
+        </Border>
+
+        <!-- ZIP の中の曲（ZIP を開いたときだけ） -->
+        <DockPanel x:Name="ZipRow" Margin="0,6,0,0" Visibility="Collapsed">
+            <TextBlock Text="ZIP:" Margin="0,0,4,0" />
+            <ComboBox x:Name="ZipCombo" Width="Auto" Margin="0" SelectionChanged="ZipCombo_SelectionChanged" />
+        </DockPanel>
+
+        <!-- 位置 -->
+        <Slider x:Name="PosSlider" Margin="0,8,0,0" Minimum="0" Maximum="1" IsMoveToPointEnabled="True"
+                Thumb.DragStarted="PosSlider_DragStarted" Thumb.DragCompleted="PosSlider_DragCompleted"
+                PreviewMouseLeftButtonUp="PosSlider_MouseUp" />
+
+        <!-- 出口ごとに 16ch のアナログメーター（使っている出口だけ） -->
+        <StackPanel x:Name="MeterPanel" Margin="0,8,0,0" />
+
+        <!-- 出口 -->
+        <WrapPanel Margin="0,10,0,0">
+            <Button x:Name="DetectButton" Content="音源を調べる" Margin="0,0,12,0" Click="DetectButton_Click"
+                    ToolTip="各 MIDI OUT に問い合わせを送り、返事からつながっている音源（GS / XG / MT-32 / TX7）を見分けて出口を振り分ける。&#x0a;音源の MIDI OUT を PC の MIDI IN につないでおく必要がある" />
+            <TextBlock Text="送り先" ToolTip="曲の送り先。自動は曲の種類で決める（XG System On → XG、GS/GM → GS、それ以外 → MT-32）" />
+            <ComboBox x:Name="RouteCombo" Width="80" SelectionChanged="RouteCombo_SelectionChanged" />
+            <TextBlock Text="GS" />
+            <Border x:Name="GsGlow" Margin="4,0,12,0" Padding="2" CornerRadius="4" BorderThickness="2" BorderBrush="Transparent">
+                <ComboBox x:Name="GsCombo" Margin="0" SelectionChanged="PortCombo_SelectionChanged" />
+            </Border>
+            <TextBlock Text="XG" />
+            <Border x:Name="XgGlow" Margin="4,0,12,0" Padding="2" CornerRadius="4" BorderThickness="2" BorderBrush="Transparent">
+                <ComboBox x:Name="XgCombo" Margin="0" SelectionChanged="PortCombo_SelectionChanged" />
+            </Border>
+            <TextBlock Text="MT-32" />
+            <Border x:Name="Mt32Glow" Margin="4,0,12,0" Padding="2" CornerRadius="4" BorderThickness="2" BorderBrush="Transparent">
+                <ComboBox x:Name="Mt32Combo" Margin="0" SelectionChanged="PortCombo_SelectionChanged" />
+            </Border>
+            <TextBlock Text="その他" ToolTip="TX7 などの出口。XG 以外のヤマハの SysEx（DXX の音色）を送る" />
+            <Border x:Name="OtherGlow" Margin="4,0,12,0" Padding="2" CornerRadius="4" BorderThickness="2" BorderBrush="Transparent">
+                <ComboBox x:Name="OtherCombo" Margin="0" SelectionChanged="PortCombo_SelectionChanged" />
+            </Border>
+        </WrapPanel>
+
+        <TextBlock x:Name="StatusText" Margin="0,8,0,0" Foreground="#FFFFB070" TextWrapping="Wrap" />
+    </StackPanel>
+</Window>
