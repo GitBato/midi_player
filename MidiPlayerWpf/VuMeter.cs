@@ -20,8 +20,10 @@ sealed class VuMeter : FrameworkElement
     double _x;   // 針の位置（0〜1）
     double _v;   // 針の速さ
 
-    // ばねの強さとダンパー（減衰比 0.5 くらい：少し行き過ぎて戻る）
+    // 上がるとき：ばねの強さとダンパー（減衰比 0.5 くらい：勢いよく振れて少し行き過ぎる）
     const double Spring = 220, Damper = 15;
+    // 戻るとき：弱いばねで、ゆっくり落ちる（減衰比 0.75 くらい）
+    const double FallSpring = 60, FallDamper = 11.5;
     // 針の振れる角度（真上が 0 度）
     const double MinDeg = -48, MaxDeg = 48;
 
@@ -48,7 +50,8 @@ sealed class VuMeter : FrameworkElement
         double h = dt / n;
         for (int i = 0; i < n; i++)
         {
-            double a = Spring * (Target - _x) - Damper * _v;
+            bool rising = Target > _x;
+            double a = rising ? Spring * (Target - _x) - Damper * _v : FallSpring * (Target - _x) - FallDamper * _v;
             _v += a * h;
             _x += _v * h;
             // 右端・左端のピンに当たったら跳ね返る

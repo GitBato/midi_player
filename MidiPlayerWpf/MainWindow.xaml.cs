@@ -572,7 +572,7 @@ public partial class MainWindow : Window
             {
                 int k = p * 16 + ch;
                 float v = Math.Clamp(_seq.Levels[k], 0f, 1f);
-                _seq.Levels[k] = v * 0.86f;
+                _seq.Levels[k] = v * 0.93f; // 音が消えたあと、ゆっくり下げる
                 int shown = open[p] ? p : 0;
                 // 小さい音でも針が動くよう、少し持ち上げる
                 target[shown] = Math.Max(target[shown], Math.Pow(v, 0.6));

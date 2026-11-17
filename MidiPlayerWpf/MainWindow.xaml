@@ -1,7 +1,7 @@
 <Window x:Class="MidiPlayerWpf.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MIDI Player" Width="1060" SizeToContent="Height" ResizeMode="CanResizeWithGrip"
+        Title="MIDI Player" Width="1280" SizeToContent="Height" ResizeMode="CanResizeWithGrip"
         AllowDrop="True" Background="#FF202428" Foreground="#FFE0E0E0"
         FontFamily="Yu Gothic UI" FontSize="13">
     <Window.Resources>
