@@ -39,9 +39,9 @@
             </DockPanel>
         </Border>
 
-        <!-- ZIP の中の曲（ZIP を開いたときだけ） -->
+        <!-- 書庫（ZIP・LZH）の中の曲（書庫を開いたときだけ） -->
         <DockPanel x:Name="ZipRow" Margin="0,6,0,0" Visibility="Collapsed">
-            <TextBlock Text="ZIP:" Margin="0,0,4,0" />
+            <TextBlock Text="書庫:" Margin="0,0,4,0" />
             <ComboBox x:Name="ZipCombo" Width="Auto" Margin="0" SelectionChanged="ZipCombo_SelectionChanged" />
         </DockPanel>
 

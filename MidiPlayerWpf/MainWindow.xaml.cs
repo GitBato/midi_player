@@ -239,7 +239,7 @@ public partial class MainWindow : Window
     {
         var dlg = new Microsoft.Win32.OpenFileDialog
         {
-            Filter = "曲 (*.mid;*.midi;*.rcp;*.r36;*.g36;*.sng;*.mm2;*.mmc;*.cm6;*.dxx;*.zip)|*.mid;*.midi;*.smf;*.kar;*.rmi;*.rcp;*.r36;*.g36;*.sng;*.mm2;*.mmc;*.cm6;*.dxx;*.zip|すべて (*.*)|*.*",
+            Filter = "曲 (*.mid;*.midi;*.rcp;*.r36;*.g36;*.sng;*.mm2;*.mmc;*.cm6;*.dxx;*.zip;*.lzh)|*.mid;*.midi;*.smf;*.kar;*.rmi;*.rcp;*.r36;*.g36;*.sng;*.mm2;*.mmc;*.cm6;*.dxx;*.zip;*.lzh;*.lha|すべて (*.*)|*.*",
         };
         if (dlg.ShowDialog(this) == true) OpenPath(dlg.FileName);
     }
@@ -254,7 +254,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            if (Archive.IsZip(path))
+            if (Archive.IsArchive(path))
             {
                 _archive = Archive.Open(path);
                 _updating = true;
@@ -536,7 +536,7 @@ public partial class MainWindow : Window
 
     void Tick()
     {
-        // 最後まで行ったら：ZIP なら次の曲へ
+        // 最後まで行ったら：書庫なら次の曲へ
         if (_finished)
         {
             _finished = false;
